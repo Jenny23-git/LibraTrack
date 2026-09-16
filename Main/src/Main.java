@@ -45,6 +45,27 @@ public class Main{
         isbns = tempIsbns;
         available = tempAvailable;
 
-        
+        // Search for a book
+        System.out.print("\nEnter book title to search: ");
+        String search = scanner.nextLine();
+
+        int found = -1;
+
+        for (int i = 0; i < titles.length; i++) {
+            if (titles[i].equalsIgnoreCase(search)) {
+                found = i;
+                break;
+            }
+        }
+
+        if (found != -1) {
+            System.out.println("Book found: " + titles[found]);
+            System.out.println("Author: " + authors[found]);
+            System.out.println("ISBN: " + isbns[found]);
+        } else {
+            System.out.println("Book not found.");
+        }
+
+
     }
 }
