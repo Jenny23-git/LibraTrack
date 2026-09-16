@@ -82,6 +82,31 @@ public class Main{
             }
         }
 
-        
+        //  Checkout / Return
+        System.out.print("Enter book title to checkout/return: ");
+        String book = scanner.nextLine();
+
+        int bookIndex = -1;
+
+        for (int i = 0; i < titles.length; i++) {
+            if (titles[i].equalsIgnoreCase(book)) {
+                bookIndex = i;
+                break;
+            }
+        }
+
+        if (bookIndex != -1) {
+            if (available[bookIndex]) {
+                available[bookIndex] = false;
+                System.out.println("Book checked out.");
+            } else {
+                available[bookIndex] = true;
+                System.out.println("Book returned.");
+            }
+        } else {
+            System.out.println("Book not found.");
+        }
+
+        scanner.close();
     }
 }
