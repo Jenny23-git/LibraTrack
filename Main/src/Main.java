@@ -10,9 +10,41 @@ public class Main{
         String[] isbns = {"1111", "2222", "3333"};
         boolean[] available = {true, false, true};
 
-    for (int i = 1; i <= 5; i++) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        IO.println("i = " + i);
+        Scanner scanner = new Scanner(System.in);
+
+        // Add a new book
+        System.out.print("Enter a new book title: ");
+        String newTitle = scanner.nextLine();
+
+        System.out.print("Enter author: ");
+        String newAuthor = scanner.nextLine();
+
+        System.out.print("Enter ISBN: ");
+        String newIsbn = scanner.nextLine();
+
+        String[] tempTitles = new String[titles.length + 1];
+        String[] tempAuthors = new String[authors.length + 1];
+        String[] tempIsbns = new String[isbns.length + 1];
+        boolean[] tempAvailable = new boolean[available.length + 1];
+
+        for (int i = 0; i < titles.length; i++) {
+            tempTitles[i] = titles[i];
+            tempAuthors[i] = authors[i];
+            tempIsbns[i] = isbns[i];
+            tempAvailable[i] = available[i];
+        }
+
+        int index = titles.length;
+        tempTitles[index] = newTitle;
+        tempAuthors[index] = newAuthor;
+        tempIsbns[index] = newIsbn;
+        tempAvailable[index] = true;
+
+        titles = tempTitles;
+        authors = tempAuthors;
+        isbns = tempIsbns;
+        available = tempAvailable;
+
+        
     }
 }
