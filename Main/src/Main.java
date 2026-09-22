@@ -5,9 +5,9 @@ public class Main{
     public static void main(String[] args) {
 
         //  Parallel arrays
-        String[] titles = {"Eloquent_JavaScript", "Web Development", "Database Systems"};
-        String[] authors = {"John Smith", "Mary Jones", "David Brown"};
-        String[] isbns = {"1111", "2222", "3333"};
+        String[] titles = {"The Alchemist", "Atomic Habits", "Pride and Prejudice"};
+        String[] authors = {"Paulo Coelho", "James Clear", "Jane Austen"};
+        String[] isbns = {"978-0-062-31123-6", "978-0-735-21129-2", "978-0-141-43951-8"};
         boolean[] available = {true, false, true};
 
         Scanner scanner = new Scanner(System.in);
