@@ -2,6 +2,8 @@ import java.util.Scanner;
 import java.util.function.Predicate;
 import java.util.Comparator;
 import java.util.stream.IntStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -231,28 +233,47 @@ static void checkout(LibraryCatalog catalog) {
 
         // create Library Catalog
 
-        LibraryCatalog catalog = new LibraryCatalog(
-                titles, authors, isbns, available
-        );
+        LibraryCatalog[] catalog = {
+                new LibraryCatalog(titles, authors, isbns, available)
+        };
+
+        // Create menu using Map and Runnable
+        Map<String, Runnable> menu = new HashMap<>();
+
+        menu.put("1", () -> printcatalog(catalog[0]));
+        menu.put("2", () -> catalog[0] = addBook(catalog[0]));
+        menu.put("3", () -> searchByTitle(catalog[0]));
+        menu.put("4", () -> checkout(catalog[0]));
+        menu.put("5", () -> displayAvailableBooks(catalog[0]));
+        menu.put("6", () -> System.out.println("Thank you for using LibraTrack!"));
+
+        // Menu-driven loop
+        String choice = "";
+
+        while (!choice.equals("6")) {
+
+            System.out.println("\n===== LIBRATRACK MENU =====");
+            System.out.println("1. Display all books");
+            System.out.println("2. Add a book");
+            System.out.println("3. Search for a book");
+            System.out.println("4. Checkout / Return a book");
+            System.out.println("5. Display available books (sorted)");
+            System.out.println("6. Exit");
+
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextLine();
+
+            Runnable action = menu.get(choice);
+
+            if (action != null) {
+                action.run();
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
 
 
-        // Display catalog
-        printcatalog(catalog);
 
-        // Add a new book
-        catalog = addBook(catalog);
-
-        // Search for a book
-        searchByTitle(catalog);
-
-        // Checkout / Return
-        checkout(catalog);
-
-        // Display updated catalog
-        printcatalog(catalog);
-
-        // Display available books sorted by title using Streams
-        displayAvailableBooks(catalog);
     }
 }
 
