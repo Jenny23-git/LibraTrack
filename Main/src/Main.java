@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.function.Predicate;
+import java.util.Comparator;
+import java.util.stream.IntStream;
 
 public class Main {
 
@@ -133,6 +135,33 @@ public class Main {
       }
   }
 
+
+    // Display available books using Streams
+
+    static void displayAvailableBooks(LibraryCatalog catalog) {
+
+        System.out.println("\nAVAILABLE BOOKS (SORTED BY TITLE)");
+
+        IntStream.range(0, catalog.titles.length)
+
+                // Filter books that are available
+                .filter(i -> catalog.available[i])
+
+                // Sort books alphabetically by title
+                .boxed()
+                .sorted(Comparator.comparing(
+                        (Integer i) -> catalog.titles[i],
+                        String.CASE_INSENSITIVE_ORDER
+                ))
+
+                // Display available books
+                .forEach(i -> {
+                    System.out.println("\nTitle: " + catalog.titles[i]);
+                    System.out.println("Author: " + catalog.authors[i]);
+                    System.out.println("ISBN: " + catalog.isbns[i]);
+                });
+    }
+
         // Print full catalog
 
 static void printcatalog(LibraryCatalog catalog) {
@@ -221,6 +250,9 @@ static void checkout(LibraryCatalog catalog) {
 
         // Display updated catalog
         printcatalog(catalog);
+
+        // Display available books sorted by title using Streams
+        displayAvailableBooks(catalog);
     }
 }
 
