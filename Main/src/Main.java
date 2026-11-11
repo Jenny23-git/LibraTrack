@@ -53,9 +53,8 @@ public class Main {
         String search = scanner.nextLine();
 
         Book found = searchBook(library, book ->
-                book.getTitle().equalsIgnoreCase(search)
+                book.matches(search)
         );
-
         if (found != null) {
 
             System.out.println("Book found: " + found.getTitle());
@@ -128,22 +127,15 @@ public class Main {
                 book.getTitle().equalsIgnoreCase(bookTitle)
         );
 
-        if (found != null) {
+        if (found.isAvailable()) {
 
-            if (found.isAvailable()) {
-
-                found.setAvailable(false);
-                System.out.println("Book checked out.");
-
-            } else {
-
-                found.setAvailable(true);
-                System.out.println("Book returned.");
-            }
+            found.borrow();
+            System.out.println("Book checked out.");
 
         } else {
 
-            System.out.println("Book not found.");
+            found.returnBook();
+            System.out.println("Book returned.");
         }
     }
 

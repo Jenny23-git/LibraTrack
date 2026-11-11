@@ -1,4 +1,4 @@
-public class Book {
+public class Book implements Searchable, Borrowable  {
 
     // Private fields (Encapsulation)
     private String title;
@@ -46,6 +46,25 @@ public class Book {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    @Override
+    public boolean matches(String keyword) {
+        return title.equalsIgnoreCase(keyword)
+                || author.equalsIgnoreCase(keyword)
+                || isbn.equalsIgnoreCase(keyword);
+    }
+
+    @Override
+    public void borrow() {
+        if (available) {
+            available = false;
+        }
+    }
+
+    @Override
+    public void returnBook() {
+        available = true;
     }
 
     // toString method
