@@ -7,20 +7,6 @@ import java.util.Map;
 
 public class Main {
 
-    // STEP 1: Book Class goes here
-    static class Book {
-        String title;
-        String author;
-        String isbn;
-        boolean available;
-
-        Book(String title, String author, String isbn, boolean available) {
-            this.title = title;
-            this.author = author;
-            this.isbn = isbn;
-            this.available = available;
-        }
-    }
 
     static Scanner scanner = new Scanner(System.in);
 
@@ -122,7 +108,7 @@ public class Main {
          String search = scanner.nextLine();
 
       int found = searchBook(catalog, book ->
-              book.title.equalsIgnoreCase(search)
+              book.getTitle().equalsIgnoreCase(search)
       );
 
         if (found != -1) {
@@ -196,7 +182,7 @@ static void checkout(LibraryCatalog catalog) {
     String book = scanner.nextLine();
 
     int bookIndex = searchBook(catalog, bookItem ->
-            bookItem.title.equalsIgnoreCase(book)
+            bookItem.getTitle().equalsIgnoreCase(book)
     );
 
     if (bookIndex != -1) {
