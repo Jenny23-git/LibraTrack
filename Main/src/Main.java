@@ -1,6 +1,22 @@
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 public class Main {
+
+    // STEP 1: Book Class goes here
+    static class Book {
+        String title;
+        String author;
+        String isbn;
+        boolean available;
+
+        Book(String title, String author, String isbn, boolean available) {
+            this.title = title;
+            this.author = author;
+            this.isbn = isbn;
+            this.available = available;
+        }
+    }
 
     static Scanner scanner = new Scanner(System.in);
 
@@ -74,22 +90,25 @@ public class Main {
 
         // linear Search for a book
 
-    static int searchBook(String[] titles,String search){
+    // Generic Search Method using Predicate
+    static int searchBook(LibraryCatalog catalog, Predicate<Book> condition) {
 
-        int found = -1;
+        for (int i = 0; i < catalog.titles.length; i++) {
 
-        for (int i = 0; i < titles.length; i++) {
+            Book book = new Book(
+                    catalog.titles[i],
+                    catalog.authors[i],
+                    catalog.isbns[i],
+                    catalog.available[i]
+            );
 
-            if (titles[i].equalsIgnoreCase(search)) {
-
-                found = i;
-                break;
+            if (condition.test(book)) {
+                return i;
             }
         }
 
-        return found;
+        return -1;
     }
-
 
         // search and display book
 
@@ -98,7 +117,9 @@ public class Main {
         System.out.print("\nEnter book title to search: ");
          String search = scanner.nextLine();
 
-         int found = searchBook(catalog.titles, search);
+      int found = searchBook(catalog, book ->
+              book.title.equalsIgnoreCase(search)
+      );
 
         if (found != -1) {
 
@@ -111,7 +132,6 @@ public class Main {
             System.out.println("Book not found.");
       }
   }
-
 
         // Print full catalog
 
@@ -144,7 +164,9 @@ static void checkout(LibraryCatalog catalog) {
     System.out.print("\nEnter book title to checkout/return: ");
     String book = scanner.nextLine();
 
-    int bookIndex = searchBook(catalog.titles, book);
+    int bookIndex = searchBook(catalog, bookItem ->
+            bookItem.title.equalsIgnoreCase(book)
+    );
 
     if (bookIndex != -1) {
 
