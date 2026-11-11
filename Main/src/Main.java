@@ -1,37 +1,17 @@
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.function.Predicate;
-import java.util.Comparator;
-import java.util.stream.IntStream;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
 
 
     static Scanner scanner = new Scanner(System.in);
 
-        // library Catalog
-
-    static class LibraryCatalog {
-
-        String[] titles;
-        String[] authors;
-        String[] isbns;
-        boolean[] available;
-
-        LibraryCatalog(String[] titles, String[] authors,
-                       String[] isbns, boolean[] available) {
-
-            this.titles = titles;
-            this.authors = authors;
-            this.isbns = isbns;
-            this.available = available;
-        }
-    }
-
          // add book
-
-    static LibraryCatalog addBook(LibraryCatalog catalog){
+    static void addBook(Library library) {
 
         System.out.print("Enter a new book title: ");
         String newTitle = scanner.nextLine();
@@ -42,196 +22,162 @@ public class Main {
         System.out.print("Enter ISBN: ");
         String newIsbn = scanner.nextLine();
 
-        String[] tempTitles = new String[catalog.titles.length + 1];
-        String[] tempAuthors = new String[catalog.authors.length + 1];
-        String[] tempIsbns = new String[catalog.isbns.length + 1];
-        boolean[] tempAvailable = new boolean[catalog.available.length + 1];
+        Book newBook = new Book(newTitle, newAuthor, newIsbn, true);
 
+        library.addBook(newBook);
 
-        // copy existing books
-
-        for (int i = 0; i < catalog.titles.length; i++) {
-
-            tempTitles[i] = catalog.titles[i];
-            tempAuthors[i] = catalog.authors[i];
-            tempIsbns[i] = catalog.isbns[i];
-            tempAvailable[i] = catalog.available[i];
-        }
-
-        //Add new book
-
-        int index = catalog.titles.length;
-
-        tempTitles[index] = newTitle;
-        tempAuthors[index] = newAuthor;
-        tempIsbns[index] = newIsbn;
-        tempAvailable[index] = true;
-
-        System.out.println("Book added successfully");
-
-        return new LibraryCatalog(
-                tempTitles,
-                tempAuthors,
-                tempIsbns,
-                tempAvailable
-        );
+        System.out.println("Book added successfully!");
     }
 
 
         // linear Search for a book
 
     // Generic Search Method using Predicate
-    static int searchBook(LibraryCatalog catalog, Predicate<Book> condition) {
+    static Book searchBook(Library library, Predicate<Book> condition) {
 
-        for (int i = 0; i < catalog.titles.length; i++) {
-
-            Book book = new Book(
-                    catalog.titles[i],
-                    catalog.authors[i],
-                    catalog.isbns[i],
-                    catalog.available[i]
-            );
+        for (Book book : library.getBooks()) {
 
             if (condition.test(book)) {
-                return i;
+                return book;
             }
         }
 
-        return -1;
+        return null;
     }
 
         // search and display book
 
-  static void searchByTitle (LibraryCatalog catalog) {
+    static void searchByTitle(Library library) {
 
         System.out.print("\nEnter book title to search: ");
-         String search = scanner.nextLine();
+        String search = scanner.nextLine();
 
-      int found = searchBook(catalog, book ->
-              book.getTitle().equalsIgnoreCase(search)
-      );
+        Book found = searchBook(library, book ->
+                book.getTitle().equalsIgnoreCase(search)
+        );
 
-        if (found != -1) {
+        if (found != null) {
 
-           System.out.println("Book found: " + catalog.titles[found]);
-           System.out.println("Author: " + catalog.authors[found]);
-           System.out.println("ISBN: " + catalog.isbns[found]);
+            System.out.println("Book found: " + found.getTitle());
+            System.out.println("Author: " + found.getAuthor());
+            System.out.println("ISBN: " + found.getIsbn());
 
-       } else {
+        } else {
 
             System.out.println("Book not found.");
-      }
-  }
+        }
+    }
 
 
     // Display available books using Streams
 
-    static void displayAvailableBooks(LibraryCatalog catalog) {
+    static void displayAvailableBooks(Library library) {
 
         System.out.println("\nAVAILABLE BOOKS (SORTED BY TITLE)");
 
-        IntStream.range(0, catalog.titles.length)
+        library.getBooks().stream()
 
                 // Filter books that are available
-                .filter(i -> catalog.available[i])
+                .filter(Book::isAvailable)
 
                 // Sort books alphabetically by title
-                .boxed()
                 .sorted(Comparator.comparing(
-                        (Integer i) -> catalog.titles[i],
+                        Book::getTitle,
                         String.CASE_INSENSITIVE_ORDER
                 ))
 
                 // Display available books
-                .forEach(i -> {
-                    System.out.println("\nTitle: " + catalog.titles[i]);
-                    System.out.println("Author: " + catalog.authors[i]);
-                    System.out.println("ISBN: " + catalog.isbns[i]);
+                .forEach(book -> {
+                    System.out.println("\nTitle: " + book.getTitle());
+                    System.out.println("Author: " + book.getAuthor());
+                    System.out.println("ISBN: " + book.getIsbn());
                 });
     }
 
         // Print full catalog
 
-static void printcatalog(LibraryCatalog catalog) {
+    static void printcatalog(Library library) {
 
-    System.out.println("\nLIBRARY CATALOG");
+        System.out.println("\nLIBRARY CATALOG");
 
-    for (int i = 0; i < catalog.titles.length; i++) {
+        int count = 1;
 
-        System.out.println("\nBook " + (i + 1));
-        System.out.println("Title: " + catalog.titles[i]);
-        System.out.println("Author: " + catalog.authors[i]);
-        System.out.println("ISBN: " + catalog.isbns[i]);
+        for (Book book : library.getBooks()) {
 
-        if (catalog.available[i]) {
+            System.out.println("\nBook " + count++);
+            System.out.println("Title: " + book.getTitle());
+            System.out.println("Author: " + book.getAuthor());
+            System.out.println("ISBN: " + book.getIsbn());
 
-            System.out.println("Status: Available");
-
-        } else {
-
-            System.out.println("Status: Checked Out");
+            if (book.isAvailable()) {
+                System.out.println("Status: Available");
+            } else {
+                System.out.println("Status: Checked Out");
+            }
         }
     }
-}
 
              // Checkout/ Return
 
-static void checkout(LibraryCatalog catalog) {
+    static void checkout(Library library) {
 
-    System.out.print("\nEnter book title to checkout/return: ");
-    String book = scanner.nextLine();
+        System.out.print("\nEnter book title to checkout/return: ");
+        String bookTitle = scanner.nextLine();
 
-    int bookIndex = searchBook(catalog, bookItem ->
-            bookItem.getTitle().equalsIgnoreCase(book)
-    );
+        Book found = searchBook(library, book ->
+                book.getTitle().equalsIgnoreCase(bookTitle)
+        );
 
-    if (bookIndex != -1) {
+        if (found != null) {
 
-        if (catalog.available[bookIndex]) {
+            if (found.isAvailable()) {
 
-                  catalog.available[bookIndex] = false;
+                found.setAvailable(false);
+                System.out.println("Book checked out.");
 
-                  System.out.println("Book checked out.");
+            } else {
+
+                found.setAvailable(true);
+                System.out.println("Book returned.");
+            }
 
         } else {
 
-                  catalog.available[bookIndex] = true;
-
-                  System.out.println("Book returned.");
-              }
-
-    } else {
-
             System.out.println("Book not found.");
-            }
+        }
     }
 
 
 
     public static void main(String[] args) {
 
-        //  Parallel arrays
+        // Create Library object
+        Library library = new Library();
 
-        String[] titles = {"The Alchemist", "Atomic Habits", "Pride and Prejudice"};
-        String[] authors = {"Paulo Coelho", "James Clear", "Jane Austen"};
-        String[] isbns = {"978-0-062-31123-6", "978-0-735-21129-2", "978-0-141-43951-8"};
-        boolean[] available = {true, false, true};
+        // Add initial books
+        library.addBook(new Book(
+                "The Alchemist", "Paulo Coelho",
+                "978-0-062-31123-6", true
+        ));
 
-        // create Library Catalog
+        library.addBook(new Book(
+                "Atomic Habits", "James Clear",
+                "978-0-735-21129-2", false
+        ));
 
-        LibraryCatalog[] catalog = {
-                new LibraryCatalog(titles, authors, isbns, available)
-        };
+        library.addBook(new Book(
+                "Pride and Prejudice", "Jane Austen",
+                "978-0-141-43951-8", true
+        ));
 
         // Create menu using Map and Runnable
         Map<String, Runnable> menu = new HashMap<>();
 
-        menu.put("1", () -> printcatalog(catalog[0]));
-        menu.put("2", () -> catalog[0] = addBook(catalog[0]));
-        menu.put("3", () -> searchByTitle(catalog[0]));
-        menu.put("4", () -> checkout(catalog[0]));
-        menu.put("5", () -> displayAvailableBooks(catalog[0]));
-        menu.put("6", () -> System.out.println("Thank you for using LibraTrack!"));
+        menu.put("1", () -> printcatalog(library));
+        menu.put("2", () -> addBook(library));
+        menu.put("3", () -> searchByTitle(library));
+        menu.put("4", () -> checkout(library));
+        menu.put("5", () -> displayAvailableBooks(library));
 
         // Menu-driven loop
         String choice = "";
