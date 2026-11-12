@@ -1,9 +1,8 @@
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.function.Predicate;
+
 
 public class Main {
 
@@ -30,20 +29,6 @@ public class Main {
     }
 
 
-        // linear Search for a book
-
-    // Generic Search Method using Predicate
-    static Book searchBook(Library library, Predicate<Book> condition) {
-
-        for (Book book : library.getBooks()) {
-
-            if (condition.test(book)) {
-                return book;
-            }
-        }
-
-        return null;
-    }
 
         // search and display book
 
@@ -52,9 +37,7 @@ public class Main {
         System.out.print("\nEnter book title to search: ");
         String search = scanner.nextLine();
 
-        Book found = searchBook(library, book ->
-                book.matches(search)
-        );
+        Book found = library.searchBook(search);
         if (found != null) {
 
             System.out.println("Book found: " + found.getTitle());
@@ -123,23 +106,67 @@ public class Main {
         System.out.print("\nEnter book title to checkout/return: ");
         String bookTitle = scanner.nextLine();
 
-        Book found = searchBook(library, book ->
-                book.getTitle().equalsIgnoreCase(bookTitle)
-        );
+        Book found = library.searchBook(bookTitle);
 
-        if (found.isAvailable()) {
+        if (found == null) {
+            System.out.println("Book not found.");
+        } else if (found.isAvailable()) {
 
-            found.borrow();
+            library.borrowBook(bookTitle);
             System.out.println("Book checked out.");
 
         } else {
 
-            found.returnBook();
+            library.returnBook(bookTitle);
             System.out.println("Book returned.");
         }
     }
 
+    // Register a library member
+    static void registerMember(Library library) {
 
+        System.out.print("Enter member ID: ");
+        String memberId = scanner.nextLine();
+
+        System.out.print("Enter member name: ");
+        String name = scanner.nextLine();
+
+        System.out.println("Select member type:");
+        System.out.println("1. Student");
+        System.out.println("2. Faculty");
+        System.out.print("Enter choice: ");
+
+        String type = scanner.nextLine();
+
+        Member member;
+
+        if (type.equals("1")) {
+            member = new Student(memberId, name);
+        } else if (type.equals("2")) {
+            member = new Faculty(memberId, name);
+        } else {
+            System.out.println("Invalid member type.");
+            return;
+        }
+
+        library.addMember(member);
+
+        System.out.println("Member registered successfully!");
+        System.out.println("Borrowing limit: " + member.getBorrowLimit());
+    }
+
+    // Display registered members
+    static void displayMembers(Library library) {
+
+        System.out.println("\nREGISTERED LIBRARY MEMBERS");
+
+        for (Member member : library.getMembers()) {
+            System.out.println("Member ID: " + member.getMemberId());
+            System.out.println("Name: " + member.getName());
+            System.out.println("Borrowing Limit: " + member.getBorrowLimit());
+            System.out.println("------------------------");
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -170,11 +197,13 @@ public class Main {
         menu.put("3", () -> searchByTitle(library));
         menu.put("4", () -> checkout(library));
         menu.put("5", () -> displayAvailableBooks(library));
+        menu.put("6", () -> registerMember(library));
+        menu.put("7", () -> displayMembers(library));
 
         // Menu-driven loop
         String choice = "";
 
-        while (!choice.equals("6")) {
+        while (!choice.equals("8")) {
 
             System.out.println("\n===== LIBRATRACK MENU =====");
             System.out.println("1. Display all books");
@@ -182,14 +211,18 @@ public class Main {
             System.out.println("3. Search for a book");
             System.out.println("4. Checkout / Return a book");
             System.out.println("5. Display available books (sorted)");
-            System.out.println("6. Exit");
+            System.out.println("6. Register a member");
+            System.out.println("7. Display registered members");
+            System.out.println("8. Exit");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextLine();
 
             Runnable action = menu.get(choice);
 
-            if (action != null) {
+            if (choice.equals("8")) {
+                System.out.println("Thank you for using LibraTrack!");
+            } else if (action != null) {
                 action.run();
             } else {
                 System.out.println("Invalid choice. Please try again.");
