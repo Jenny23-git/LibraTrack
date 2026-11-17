@@ -1,20 +1,27 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Library {
 
-    private List<Book> books;
+    private Map<String, Book> books;
     private List<Member> members;
 
     // Constructor
     public Library() {
-        books = new ArrayList<>();
+        books = new HashMap<>();
         members = new ArrayList<>();
     }
 
     // Add a book to the library
     public void addBook(Book book) {
-        books.add(book);
+        if (books.containsKey(book.getIsbn())) {
+            System.out.println("A book with this ISBN already exists.");
+            return;
+        }
+
+        books.put(book.getIsbn(), book);
     }
 
     // Register a library member
@@ -29,12 +36,12 @@ public class Library {
 
     // Get all books
     public List<Book> getBooks() {
-        return books;
+        return new ArrayList<>(books.values());
     }
 
     // Search for a book using the Searchable interface
     public Book searchBook(String keyword) {
-        for (Book book : books) {
+        for (Book book : books.values()) {
             if (book.matches(keyword)) {
                 return book;
             }
