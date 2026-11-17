@@ -61,12 +61,35 @@ public class Library {
         return false;
     }
 
+
+    // Reserve a book for a member
+    public boolean reserveBook(String keyword, Member member) {
+        Book book = searchBook(keyword);
+
+        if (book != null && !book.isAvailable()) {
+            book.addReservation(member);
+            return true;
+        }
+
+        return false;
+    }
+
     // Return a book
     public boolean returnBook(String keyword) {
         Book book = searchBook(keyword);
 
         if (book != null && !book.isAvailable()) {
-            book.returnBook();
+
+            if (book.hasReservations()) {
+                Member nextMember = book.getNextReservation();
+                book.borrow();
+
+                System.out.println("Book assigned to next member in queue: "
+                        + nextMember.getName());
+            } else {
+                book.returnBook();
+            }
+
             return true;
         }
 

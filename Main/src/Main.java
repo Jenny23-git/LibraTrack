@@ -96,6 +96,9 @@ public class Main {
             } else {
                 System.out.println("Status: Checked Out");
             }
+
+            System.out.println("Members Waiting: " + book.getReservationCount());
+
         }
     }
 
@@ -121,6 +124,36 @@ public class Main {
             System.out.println("Book returned.");
         }
     }
+
+    static void reserveBook(Library library) {
+        System.out.print("Enter member ID: ");
+        String memberId = scanner.nextLine();
+
+        Member selectedMember = null;
+
+        for (Member member : library.getMembers()) {
+            if (member.getMemberId().equals(memberId)) {
+                selectedMember = member;
+                break;
+            }
+        }
+
+        if (selectedMember == null) {
+            System.out.println("Member not found.");
+            return;
+        }
+
+        System.out.print("Enter book title to reserve: ");
+        String title = scanner.nextLine();
+
+        if (library.reserveBook(title, selectedMember)) {
+            System.out.println("Reservation added successfully.");
+        } else {
+            System.out.println("Book not found or currently available.");
+        }
+    }
+
+
 
     // Register a library member
     static void registerMember(Library library) {
@@ -199,6 +232,7 @@ public class Main {
         menu.put("5", () -> displayAvailableBooks(library));
         menu.put("6", () -> registerMember(library));
         menu.put("7", () -> displayMembers(library));
+        menu.put("9", () -> reserveBook(library));
 
         // Menu-driven loop
         String choice = "";
@@ -214,6 +248,7 @@ public class Main {
             System.out.println("6. Register a member");
             System.out.println("7. Display registered members");
             System.out.println("8. Exit");
+            System.out.println("9. Reserve a Book");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextLine();

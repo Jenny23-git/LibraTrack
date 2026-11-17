@@ -1,3 +1,7 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
+
 public class Book implements Searchable, Borrowable  {
 
     // Private fields (Encapsulation)
@@ -5,6 +9,8 @@ public class Book implements Searchable, Borrowable  {
     private String author;
     private String isbn;
     private boolean available;
+    private Queue<Member> reservationQueue = new LinkedList<>();
+
 
     // Constructor
     public Book(String title, String author, String isbn, boolean available) {
@@ -65,6 +71,26 @@ public class Book implements Searchable, Borrowable  {
     @Override
     public void returnBook() {
         available = true;
+    }
+
+    // Add a member to the reservation waitlist
+    public void addReservation(Member member) {
+        reservationQueue.offer(member);
+    }
+
+    // Get and remove the next member in the queue
+    public Member getNextReservation() {
+        return reservationQueue.poll();
+    }
+
+    // Check whether the book has reservations
+    public boolean hasReservations() {
+        return !reservationQueue.isEmpty();
+    }
+
+    // Get the number of members waiting
+    public int getReservationCount() {
+        return reservationQueue.size();
     }
 
     // toString method
