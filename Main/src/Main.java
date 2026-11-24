@@ -102,6 +102,23 @@ public class Main {
         }
     }
 
+    // Display recently returned books
+    static void displayRecentlyReturnedBooks(Library library) {
+        System.out.println("\nRECENTLY RETURNED BOOKS");
+
+        if (library.getRecentlyReturnedBooks().isEmpty()) {
+            System.out.println("No recently returned books.");
+            return;
+        }
+
+        for (Book book : library.getRecentlyReturnedBooks()) {
+            System.out.println("Title: " + book.getTitle());
+            System.out.println("Author: " + book.getAuthor());
+            System.out.println("ISBN: " + book.getIsbn());
+            System.out.println("--------------------");
+        }
+    }
+
              // Checkout/ Return
 
     static void checkout(Library library) {
@@ -233,6 +250,7 @@ public class Main {
         menu.put("6", () -> registerMember(library));
         menu.put("7", () -> displayMembers(library));
         menu.put("9", () -> reserveBook(library));
+        menu.put("10", () -> displayRecentlyReturnedBooks(library));
 
         // Menu-driven loop
         String choice = "";
@@ -249,6 +267,7 @@ public class Main {
             System.out.println("7. Display registered members");
             System.out.println("8. Exit");
             System.out.println("9. Reserve a Book");
+            System.out.println("10. Recently Returned Books");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextLine();

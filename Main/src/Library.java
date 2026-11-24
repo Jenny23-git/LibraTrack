@@ -2,16 +2,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 public class Library {
 
     private Map<String, Book> books;
     private List<Member> members;
+    private Deque<Book> recentlyReturnedBooks;
 
     // Constructor
     public Library() {
         books = new HashMap<>();
         members = new ArrayList<>();
+        recentlyReturnedBooks = new ArrayDeque<>();
     }
 
     // Add a book to the library
@@ -37,6 +41,11 @@ public class Library {
     // Get all books
     public List<Book> getBooks() {
         return new ArrayList<>(books.values());
+    }
+
+    // Get recently returned books
+    public Deque<Book> getRecentlyReturnedBooks() {
+        return recentlyReturnedBooks;
     }
 
     // Search for a book using the Searchable interface
@@ -88,6 +97,7 @@ public class Library {
                         + nextMember.getName());
             } else {
                 book.returnBook();
+                recentlyReturnedBooks.push(book);
             }
 
             return true;
