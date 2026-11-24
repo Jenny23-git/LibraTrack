@@ -4,18 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Deque;
 import java.util.ArrayDeque;
+import java.util.TreeMap;
 
 public class Library {
 
     private Map<String, Book> books;
     private List<Member> members;
     private Deque<Book> recentlyReturnedBooks;
+    private Map<String, Book> booksByTitle;
 
     // Constructor
     public Library() {
         books = new HashMap<>();
         members = new ArrayList<>();
         recentlyReturnedBooks = new ArrayDeque<>();
+        booksByTitle = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     }
 
     // Add a book to the library
@@ -26,6 +29,7 @@ public class Library {
         }
 
         books.put(book.getIsbn(), book);
+        booksByTitle.put(book.getTitle(), book);
     }
 
     // Register a library member
@@ -41,6 +45,11 @@ public class Library {
     // Get all books
     public List<Book> getBooks() {
         return new ArrayList<>(books.values());
+    }
+
+    // Get books sorted alphabetically by title
+    public List<Book> getBooksSortedByTitle() {
+        return new ArrayList<>(booksByTitle.values());
     }
 
     // Get recently returned books

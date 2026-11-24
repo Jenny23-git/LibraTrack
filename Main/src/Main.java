@@ -119,6 +119,18 @@ public class Main {
         }
     }
 
+    // Display books sorted alphabetically by title
+    static void displaySortedCatalog(Library library) {
+        System.out.println("\nCATALOG SORTED BY TITLE");
+
+        for (Book book : library.getBooksSortedByTitle()) {
+            System.out.println("Title: " + book.getTitle());
+            System.out.println("Author: " + book.getAuthor());
+            System.out.println("ISBN: " + book.getIsbn());
+            System.out.println("--------------------");
+        }
+    }
+
              // Checkout/ Return
 
     static void checkout(Library library) {
@@ -251,6 +263,7 @@ public class Main {
         menu.put("7", () -> displayMembers(library));
         menu.put("9", () -> reserveBook(library));
         menu.put("10", () -> displayRecentlyReturnedBooks(library));
+        menu.put("11", () -> displaySortedCatalog(library));
 
         // Menu-driven loop
         String choice = "";
@@ -268,6 +281,7 @@ public class Main {
             System.out.println("8. Exit");
             System.out.println("9. Reserve a Book");
             System.out.println("10. Recently Returned Books");
+            System.out.println("11. Display Books Sorted by Title");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextLine();
