@@ -135,7 +135,24 @@ public class Main {
 
     static void checkout(Library library) {
 
-        System.out.print("\nEnter book title to checkout/return: ");
+        System.out.print("\nEnter member ID: ");
+        String memberId = scanner.nextLine();
+
+        Member selectedMember = null;
+
+        for (Member member : library.getMembers()) {
+            if (member.getMemberId().equals(memberId)) {
+                selectedMember = member;
+                break;
+            }
+        }
+
+        if (selectedMember == null) {
+            System.out.println("Member not found.");
+            return;
+        }
+
+        System.out.print("Enter book title to checkout/return: ");
         String bookTitle = scanner.nextLine();
 
         Book found = library.searchBook(bookTitle);
@@ -144,13 +161,15 @@ public class Main {
             System.out.println("Book not found.");
         } else if (found.isAvailable()) {
 
-            library.borrowBook(bookTitle);
-            System.out.println("Book checked out.");
+            if (library.borrowBook(bookTitle, selectedMember)) {
+                System.out.println("Book checked out.");
+            }
 
         } else {
 
-            library.returnBook(bookTitle);
-            System.out.println("Book returned.");
+            if (library.returnBook(bookTitle, selectedMember)) {
+                System.out.println("Book returned.");
+            }
         }
     }
 
@@ -230,6 +249,42 @@ public class Main {
         }
     }
 
+    // Display a member's borrowing history
+    static void displayBorrowHistory(Library library) {
+
+        System.out.print("\nEnter member ID: ");
+        String memberId = scanner.nextLine();
+
+        Member selectedMember = null;
+
+        for (Member member : library.getMembers()) {
+            if (member.getMemberId().equals(memberId)) {
+                selectedMember = member;
+                break;
+            }
+        }
+
+        if (selectedMember == null) {
+            System.out.println("Member not found.");
+            return;
+        }
+
+        System.out.println("\nBORROWING HISTORY FOR: "
+                + selectedMember.getName());
+
+        if (selectedMember.getBorrowHistory().isEmpty()) {
+            System.out.println("No transaction history found.");
+            return;
+        }
+
+        for (Transaction transaction : selectedMember.getBorrowHistory()) {
+            System.out.println("Book: " + transaction.getBook().getTitle());
+            System.out.println("Transaction: " + transaction.getTransactionType());
+            System.out.println("Date: " + transaction.getTransactionDate());
+            System.out.println("--------------------");
+        }
+    }
+
     public static void main(String[] args) {
 
         // Create Library object
@@ -264,6 +319,7 @@ public class Main {
         menu.put("9", () -> reserveBook(library));
         menu.put("10", () -> displayRecentlyReturnedBooks(library));
         menu.put("11", () -> displaySortedCatalog(library));
+        menu.put("12", () -> displayBorrowHistory(library));
 
         // Menu-driven loop
         String choice = "";
@@ -282,6 +338,7 @@ public class Main {
             System.out.println("9. Reserve a Book");
             System.out.println("10. Recently Returned Books");
             System.out.println("11. Display Books Sorted by Title");
+            System.out.println("12. Display Member Borrowing History");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextLine();

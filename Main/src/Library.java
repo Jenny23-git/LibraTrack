@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Deque;
 import java.util.ArrayDeque;
 import java.util.TreeMap;
+import java.time.LocalDate;
 
 public class Library {
 
@@ -73,6 +74,51 @@ public class Library {
 
         if (book != null && book.isAvailable()) {
             book.borrow();
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean borrowBook(String keyword, Member member) {
+        Book book = searchBook(keyword);
+
+        if (book != null && book.isAvailable()) {
+            book.borrow();
+
+            member.addTransaction(new Transaction(
+                    book, "BORROW", LocalDate.now().toString()
+            ));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean returnBook(String keyword, Member member) {
+        Book book = searchBook(keyword);
+
+        if (book != null && !book.isAvailable()) {
+            member.addTransaction(new Transaction(
+                    book, "RETURN", LocalDate.now().toString()
+            ));
+
+            if (book.hasReservations()) {
+                Member nextMember = book.getNextReservation();
+                book.borrow();
+
+                nextMember.addTransaction(new Transaction(
+                        book, "BORROW", LocalDate.now().toString()
+                ));
+
+                System.out.println("Book assigned to next member in queue: "
+                        + nextMember.getName());
+            } else {
+                book.returnBook();
+                recentlyReturnedBooks.push(book);
+            }
+
             return true;
         }
 
