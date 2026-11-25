@@ -1,3 +1,10 @@
+package App;
+
+import Model.*;
+import Repository.Library;
+import Service.LibraryService;
+import Service.LibraryServiceImpl;
+
 import java.util.Comparator;
 import java.util.Map;
 import java.util.HashMap;
@@ -10,7 +17,7 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
          // add book
-    static void addBook(Library library) {
+    static void addBook(LibraryService library) {
 
         System.out.print("Enter a new book title: ");
         String newTitle = scanner.nextLine();
@@ -25,14 +32,14 @@ public class Main {
 
         library.addBook(newBook);
 
-        System.out.println("Book added successfully!");
+        System.out.println("Model.Book added successfully!");
     }
 
 
 
         // search and display book
 
-    static void searchByTitle(Library library) {
+    static void searchByTitle(LibraryService library) {
 
         System.out.print("\nEnter book title to search: ");
         String search = scanner.nextLine();
@@ -40,20 +47,20 @@ public class Main {
         Book found = library.searchBook(search);
         if (found != null) {
 
-            System.out.println("Book found: " + found.getTitle());
+            System.out.println("Model.Book found: " + found.getTitle());
             System.out.println("Author: " + found.getAuthor());
             System.out.println("ISBN: " + found.getIsbn());
 
         } else {
 
-            System.out.println("Book not found.");
+            System.out.println("Model.Book not found.");
         }
     }
 
 
     // Display available books using Streams
 
-    static void displayAvailableBooks(Library library) {
+    static void displayAvailableBooks(LibraryService library) {
 
         System.out.println("\nAVAILABLE BOOKS (SORTED BY TITLE)");
 
@@ -78,7 +85,7 @@ public class Main {
 
         // Print full catalog
 
-    static void printcatalog(Library library) {
+    static void printcatalog(LibraryService library) {
 
         System.out.println("\nLIBRARY CATALOG");
 
@@ -86,7 +93,7 @@ public class Main {
 
         for (Book book : library.getBooks()) {
 
-            System.out.println("\nBook " + count++);
+            System.out.println("\nModel.Book " + count++);
             System.out.println("Title: " + book.getTitle());
             System.out.println("Author: " + book.getAuthor());
             System.out.println("ISBN: " + book.getIsbn());
@@ -103,7 +110,7 @@ public class Main {
     }
 
     // Display recently returned books
-    static void displayRecentlyReturnedBooks(Library library) {
+    static void displayRecentlyReturnedBooks(LibraryService library) {
         System.out.println("\nRECENTLY RETURNED BOOKS");
 
         if (library.getRecentlyReturnedBooks().isEmpty()) {
@@ -120,7 +127,7 @@ public class Main {
     }
 
     // Display books sorted alphabetically by title
-    static void displaySortedCatalog(Library library) {
+    static void displaySortedCatalog(LibraryService library) {
         System.out.println("\nCATALOG SORTED BY TITLE");
 
         for (Book book : library.getBooksSortedByTitle()) {
@@ -133,7 +140,7 @@ public class Main {
 
              // Checkout/ Return
 
-    static void checkout(Library library) {
+    static void checkout(LibraryService library) {
 
         System.out.print("\nEnter member ID: ");
         String memberId = scanner.nextLine();
@@ -148,7 +155,7 @@ public class Main {
         }
 
         if (selectedMember == null) {
-            System.out.println("Member not found.");
+            System.out.println("Model.Member not found.");
             return;
         }
 
@@ -158,22 +165,22 @@ public class Main {
         Book found = library.searchBook(bookTitle);
 
         if (found == null) {
-            System.out.println("Book not found.");
+            System.out.println("Model.Book not found.");
         } else if (found.isAvailable()) {
 
             if (library.borrowBook(bookTitle, selectedMember)) {
-                System.out.println("Book checked out.");
+                System.out.println("Model.Book checked out.");
             }
 
         } else {
 
             if (library.returnBook(bookTitle, selectedMember)) {
-                System.out.println("Book returned.");
+                System.out.println("Model.Book returned.");
             }
         }
     }
 
-    static void reserveBook(Library library) {
+    static void reserveBook(LibraryService library) {
         System.out.print("Enter member ID: ");
         String memberId = scanner.nextLine();
 
@@ -187,7 +194,7 @@ public class Main {
         }
 
         if (selectedMember == null) {
-            System.out.println("Member not found.");
+            System.out.println("Model.Member not found.");
             return;
         }
 
@@ -197,14 +204,14 @@ public class Main {
         if (library.reserveBook(title, selectedMember)) {
             System.out.println("Reservation added successfully.");
         } else {
-            System.out.println("Book not found or currently available.");
+            System.out.println("Model.Book not found or currently available.");
         }
     }
 
 
 
     // Register a library member
-    static void registerMember(Library library) {
+    static void registerMember(LibraryService library) {
 
         System.out.print("Enter member ID: ");
         String memberId = scanner.nextLine();
@@ -213,8 +220,8 @@ public class Main {
         String name = scanner.nextLine();
 
         System.out.println("Select member type:");
-        System.out.println("1. Student");
-        System.out.println("2. Faculty");
+        System.out.println("1. Model.Student");
+        System.out.println("2. Model.Faculty");
         System.out.print("Enter choice: ");
 
         String type = scanner.nextLine();
@@ -232,17 +239,17 @@ public class Main {
 
         library.addMember(member);
 
-        System.out.println("Member registered successfully!");
+        System.out.println("Model.Member registered successfully!");
         System.out.println("Borrowing limit: " + member.getBorrowLimit());
     }
 
     // Display registered members
-    static void displayMembers(Library library) {
+    static void displayMembers(LibraryService library) {
 
         System.out.println("\nREGISTERED LIBRARY MEMBERS");
 
         for (Member member : library.getMembers()) {
-            System.out.println("Member ID: " + member.getMemberId());
+            System.out.println("Model.Member ID: " + member.getMemberId());
             System.out.println("Name: " + member.getName());
             System.out.println("Borrowing Limit: " + member.getBorrowLimit());
             System.out.println("------------------------");
@@ -250,7 +257,7 @@ public class Main {
     }
 
     // Display a member's borrowing history
-    static void displayBorrowHistory(Library library) {
+    static void displayBorrowHistory(LibraryService library) {
 
         System.out.print("\nEnter member ID: ");
         String memberId = scanner.nextLine();
@@ -265,7 +272,7 @@ public class Main {
         }
 
         if (selectedMember == null) {
-            System.out.println("Member not found.");
+            System.out.println("Model.Member not found.");
             return;
         }
 
@@ -278,8 +285,8 @@ public class Main {
         }
 
         for (Transaction transaction : selectedMember.getBorrowHistory()) {
-            System.out.println("Book: " + transaction.getBook().getTitle());
-            System.out.println("Transaction: " + transaction.getTransactionType());
+            System.out.println("Model.Book: " + transaction.getBook().getTitle());
+            System.out.println("Model.Transaction: " + transaction.getTransactionType());
             System.out.println("Date: " + transaction.getTransactionDate());
             System.out.println("--------------------");
         }
@@ -287,8 +294,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Create Library object
-        Library library = new Library();
+        // Create LibraryService using its implementation
+        LibraryService library = new LibraryServiceImpl(new Library());
 
         // Add initial books
         library.addBook(new Book(
@@ -335,10 +342,10 @@ public class Main {
             System.out.println("6. Register a member");
             System.out.println("7. Display registered members");
             System.out.println("8. Exit");
-            System.out.println("9. Reserve a Book");
+            System.out.println("9. Reserve a Model.Book");
             System.out.println("10. Recently Returned Books");
             System.out.println("11. Display Books Sorted by Title");
-            System.out.println("12. Display Member Borrowing History");
+            System.out.println("12. Display Model.Member Borrowing History");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextLine();

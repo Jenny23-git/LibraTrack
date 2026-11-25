@@ -1,3 +1,5 @@
+package Model;
+
 public class Faculty extends Member {
 
     public Faculty(String memberId, String name) {

@@ -1,8 +1,12 @@
+package Model;
+
+import Service.Searchable;
+import Service.Borrowable;
 import java.util.LinkedList;
 import java.util.Queue;
 
 
-public class Book implements Searchable, Borrowable  {
+public class Book implements Searchable, Borrowable {
 
     // Private fields (Encapsulation)
     private String title;
@@ -96,7 +100,7 @@ public class Book implements Searchable, Borrowable  {
     // toString method
     @Override
     public String toString() {
-        return "Book{" +
+        return "Model.Book{" +
                 "title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", isbn='" + isbn + '\'' +

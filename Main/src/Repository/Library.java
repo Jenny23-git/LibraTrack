@@ -1,3 +1,9 @@
+package Repository;
+
+import Model.Book;
+import Model.Member;
+import Model.Transaction;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
@@ -58,7 +64,7 @@ public class Library {
         return recentlyReturnedBooks;
     }
 
-    // Search for a book using the Searchable interface
+    // Search for a book using the Service.Searchable interface
     public Book searchBook(String keyword) {
         for (Book book : books.values()) {
             if (book.matches(keyword)) {
@@ -112,7 +118,7 @@ public class Library {
                         book, "BORROW", LocalDate.now().toString()
                 ));
 
-                System.out.println("Book assigned to next member in queue: "
+                System.out.println("Model.Book assigned to next member in queue: "
                         + nextMember.getName());
             } else {
                 book.returnBook();
@@ -148,7 +154,7 @@ public class Library {
                 Member nextMember = book.getNextReservation();
                 book.borrow();
 
-                System.out.println("Book assigned to next member in queue: "
+                System.out.println("Model.Book assigned to next member in queue: "
                         + nextMember.getName());
             } else {
                 book.returnBook();
