@@ -13,6 +13,10 @@ import java.util.ArrayDeque;
 import java.util.TreeMap;
 import java.time.LocalDate;
 
+/**
+ * Manages the library's books, members, borrowing, returning,
+ * reservations, and recently returned books.
+ */
 public class Library {
 
     private Map<String, Book> books;
@@ -20,7 +24,9 @@ public class Library {
     private Deque<Book> recentlyReturnedBooks;
     private Map<String, Book> booksByTitle;
 
-    // Constructor
+    /**
+     * Initializes the library collections.
+     */
     public Library() {
         books = new HashMap<>();
         members = new ArrayList<>();
@@ -28,7 +34,11 @@ public class Library {
         booksByTitle = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     }
 
-    // Add a book to the library
+    /**
+     * Adds a new book to the library.
+     *
+     * @param book the book to add
+     */
     public void addBook(Book book) {
         if (books.containsKey(book.getIsbn())) {
             System.out.println("A book with this ISBN already exists.");
@@ -39,32 +49,57 @@ public class Library {
         booksByTitle.put(book.getTitle(), book);
     }
 
-    // Register a library member
+    /**
+     * Registers a new library member.
+     *
+     * @param member the member to register
+     */
     public void addMember(Member member) {
         members.add(member);
     }
 
-    // Display all registered members
+    /**
+     * Retrieves all registered members.
+     *
+     * @return a list of library members
+     */
     public List<Member> getMembers() {
         return members;
     }
 
-    // Get all books
+    /**
+     * Retrieves all books in the library.
+     *
+     * @return a list containing all books
+     */
     public List<Book> getBooks() {
         return new ArrayList<>(books.values());
     }
 
-    // Get books sorted alphabetically by title
+    /**
+     * Retrieves books sorted alphabetically by title.
+     *
+     * @return a sorted list of books
+     */
     public List<Book> getBooksSortedByTitle() {
         return new ArrayList<>(booksByTitle.values());
     }
 
-    // Get recently returned books
+    /**
+     * Retrieves recently returned books.
+     *
+     * @return a deque of recently returned books
+     */
     public Deque<Book> getRecentlyReturnedBooks() {
         return recentlyReturnedBooks;
     }
 
-    // Search for a book using the Service.Searchable interface
+    /**
+     * Searches for a book using its title, author, or ISBN.
+     *
+     * @param keyword the search keyword
+     * @return the matching book, or null if not found
+     */
     public Book searchBook(String keyword) {
         for (Book book : books.values()) {
             if (book.matches(keyword)) {
@@ -74,7 +109,12 @@ public class Library {
         return null;
     }
 
-    // Borrow a book
+    /**
+     * Borrows an available book.
+     *
+     * @param keyword the book search keyword
+     * @return true if borrowing succeeds, otherwise false
+     */
     public boolean borrowBook(String keyword) {
         Book book = searchBook(keyword);
 
@@ -86,6 +126,13 @@ public class Library {
         return false;
     }
 
+    /**
+     * Borrows a book for a registered member and records the transaction.
+     *
+     * @param keyword the book search keyword
+     * @param member the member borrowing the book
+     * @return true if borrowing succeeds, otherwise false
+     */
     public boolean borrowBook(String keyword, Member member) {
         Book book = searchBook(keyword);
 
@@ -102,6 +149,14 @@ public class Library {
         return false;
     }
 
+    /**
+     * Returns a borrowed book and records the transaction.
+     * If reservations exist, the book is assigned to the next member.
+     *
+     * @param keyword the book search keyword
+     * @param member the member returning the book
+     * @return true if returning succeeds, otherwise false
+     */
     public boolean returnBook(String keyword, Member member) {
         Book book = searchBook(keyword);
 
@@ -131,8 +186,13 @@ public class Library {
         return false;
     }
 
-
-    // Reserve a book for a member
+    /**
+     * Reserves an unavailable book for a member.
+     *
+     * @param keyword the book search keyword
+     * @param member the member making the reservation
+     * @return true if reservation succeeds, otherwise false
+     */
     public boolean reserveBook(String keyword, Member member) {
         Book book = searchBook(keyword);
 
@@ -144,7 +204,13 @@ public class Library {
         return false;
     }
 
-    // Return a book
+    /**
+     * Returns a borrowed book without recording a member transaction.
+     * If reservations exist, the book is assigned to the next member.
+     *
+     * @param keyword the book search keyword
+     * @return true if returning succeeds, otherwise false
+     */
     public boolean returnBook(String keyword) {
         Book book = searchBook(keyword);
 
